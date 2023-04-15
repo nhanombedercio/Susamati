@@ -1,32 +1,22 @@
-### funcao para criar instalar e ler pacotes
-
-##Funcao para instalar pacotes importantes
-install_data_packages <- function() {
-  packages <- c("ggthemes","RColorBrewer","leaflet","esquisse", "sf","shiny", "shinythemes", "shinydashboard", "shinyWidgets", "DT", "ggplot2", "leaflet", "plotly", "flexdashboard", "shinyjs","tidyverse", "data.table", "dplyr", "readr", "readxl", "googlesheets4", "jsonlite", "httr", "stringr", "lubridate", "janitor")
-  # Verifica se cada pacote da lista está instalado e instala se não estiver
-  # Verifica se cada pacote da lista está instalado e instala se não estiver
-  for (package in packages) {
-    if (!requireNamespace(package, quietly = TRUE)) {
-      install.packages(package)
-      library(package)
-      
-    } else {
-      print("PACOTE INSTALADO E CARREGADO")
-    }
-  }
-  
-  
-  
-  # Carrega todos os pacotes instalados
-  #library(packages)
-  # Carrega todos os pacotes instalados
-  lapply(packages, library, character.only = TRUE)
-  print("PACOTE INSTALADO E CARREGADO")
-}
-
-
-##funcao para contar numero de observacoes da variavel que quero plotar 
-  
+library(shiny)
+library(bslib)
+library(ggthemes)
+library(RColorBrewer)
+library(sf)
+library(shinythemes)
+library(lubridate)
+library(jsonlite)
+library(stringr)
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(shinyjs)
+library(plotly)
+library(ggplot2)
+library(DT)
+library(shinyWidgets)
+library(shinydashboard)
+library(bslib)
   create_summary_table <- function(data, group_vars, count_var) {
    summary_table <- data %>%
       group_by(across(all_of(group_vars))) %>%
@@ -56,9 +46,10 @@ install_data_packages <- function() {
   
  funcao_mapa<-function(data_sf, dado_dist){
    library(stringr)
-   dados_mapa<-left_join(monapo_sf, monapo %>% group_by(District_ID,distrito,tipo_casa_banho1) %>% 
-                           summarise(Total=n()) %>% mutate(percentagem=round(Total/sum(Total)*100, digits = 2 )), by = "District_ID")
- 
+   dados_mapa <- left_join(data_sf, dado_dist %>% group_by(District_ID, distrito, tipo_casa_banho1) %>% 
+                             summarise(Total = n()) %>% mutate(percentagem = round(Total / sum(Total) * 100, digits = 2)),
+                           by = c("District_ID" = "District_ID"), multiple = "all")
+   
    
    mapa <- ggplot(dados_mapa) +
      aes(text = paste("Tipo de latrina:", tipo_casa_banho1), fill = percentagem) +
@@ -71,7 +62,7 @@ install_data_packages <- function() {
          size = 12, # Tamanho do texto aumentado para 10
          face = "bold",
          color = "black",
-         margin = margin(10, 10, 10, 10, "pt")
+         margin = margin(12, 12, 12, 12, "pt")
        ),
    axis.text.x = element_blank(), 
    axis.text.y = element_blank()
@@ -80,4 +71,30 @@ install_data_packages <- function() {
    return(mapa)
  }
    
-  
+ ############Rendimento mensal 
+ tipo_redimento<-function(dado) {
+   visitas <- as.name("famílias visitadas")
+   
+   grafico(create_summary_table(dado, "rendimento_tipo"),x=rendimento_tipo,y=Total, fill=rendimento_tipo, dado,visitas)+
+     labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
+          x="",
+          y="Numero de Familias")+
+     theme(axis.text.x = element_blank(), # remove os valores do eixo x
+           axis.title.x = element_blank(), # remove o título do eixo x
+           axis.line.x = element_blank())+ # remove a linha do eixo x
+     theme(legend.position = "top") 
+ }
+ 
+############## 
+ faixa_rendimento  <- function(dados) {
+   tem_latrina <- as.name("famílias visitadas")
+   grafico(create_summary_table(dado, "rendimento_faixa"), x = rendimento_faixa, y = Total, fill = rendimento_faixa,dados,tem_latrina) +
+     labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
+          x = "",
+          y = "Numero de Familias") +
+     theme(axis.text.x = element_blank(), # remove os valores do eixo x
+           axis.title.x = element_blank(), # remove o título do eixo x
+           axis.line.x = element_blank())+ # remove a linha do eixo x
+     theme(legend.position = "top")
+   #return(grafico(monapo, tem_latrina, 250, 50))
+ }

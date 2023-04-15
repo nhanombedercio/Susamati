@@ -1,5 +1,23 @@
-install_data_packages()
-
+library(shiny)
+library(bslib)
+library(ggthemes)
+library(RColorBrewer)
+library(sf)
+library(shinythemes)
+library(lubridate)
+library(jsonlite)
+library(stringr)
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(shinyjs)
+library(plotly)
+library(ggplot2)
+library(DT)
+library(shinyWidgets)
+library(shinydashboard)
+library(bslib)
+ 
 # Define UI
 ui <- fluidPage(
   
@@ -9,8 +27,9 @@ ui <- fluidPage(
   # Define a barra de navegação
   navbarPage(
     # Define o título da barra de navegação
-    title = "SUSAMATI" ,  
-    tags$head(tags$style(HTML('.navbar-default {background-color: #a742f5;}'))),
+    title = "SUSAMATI" ,
+    header = "Meu Cabeçalho",
+   # tags$head(tags$style(HTML('.navbar-default {background-color: #a742f5;}'))),
     #title = "ASSOCIAÇÃO MUVA",
     
     #BASELINE  
@@ -66,7 +85,7 @@ ui <- fluidPage(
                tabPanel("Situação económica",tabname="monapo_situacao", icon=icon("chart-line"),
                         # Define as colunas do layout de grade
                         column(12,
-                               wellPanel(filtro_economia_monapo)
+                              # wellPanel(filtro_economia_monapo)
                         ),
                         
                         
@@ -359,21 +378,17 @@ ui <- fluidPage(
 
 # Define o servidor
 server <- function(input, output) {
-
   ###########MONAPO#
   output$monapo_mapa<- renderPlotly({
-  funcao_mapa(monapo_sf,monapo)
+     funcao_mapa(monapo_sf, monapo)
+    })
+  
+  ###########MONAPO#
+  output$ribaue_mapa<- renderPlotly({
+    funcao_mapa(ribaue_sf, ribaue)
   })
-  output$monapo_economica_baseline <- renderPlotly({ 
-  if(input$monapo_filtro_economica=="Tipo de Rendimento") {
-    rendimento_monapo()
-  } else 
-    if(input$monapo_filtro_economica=="Rendimento Mensal") {
-      Tipo_rendimento_monapo() 
-    }    
-  })
+
 }
 # Execute o aplicativo Shiny
-
 shinyApp(ui, server)
 

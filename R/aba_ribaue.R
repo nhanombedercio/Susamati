@@ -22,23 +22,18 @@ library(bslib)
 dir <- "C:/Users/Dercio/OneDrive/Projectos Rstudio/2023/Susamati/data"
 Nampula_clear <- read_excel(paste(dir, "/Nampula_clear.xls", sep=""))
 
-monapo <- Nampula_clear %>% filter(District_ID %in% "MZ0715") ## Monapo 
-monapo$tipo_casa_banho1<- ifelse(is.na(monapo$tipo_casa_banho1), "Sem Latrina", monapo$tipo_casa_banho1)
+ribaue <- Nampula_clear %>% filter(District_ID %in% "MZ0723") ## Monapo 
+ribaue$tipo_casa_banho1<- ifelse(is.na(ribaue$tipo_casa_banho1), "Sem Latrina", ribaue$tipo_casa_banho1)
 ## shapfile de distritos
-monapo_sf <- readRDS(paste(dir, "/sf_districts.rds", sep="")) %>% filter(District_ID %in% "MZ0715")
+ribaue_sf <- readRDS(paste(dir, "/sf_districts.rds", sep="")) %>% filter(District_ID %in% "MZ0723")
 
- 
+
 ###JUNTAR BASE DE DADOS E SHAPFILE
 
- 
+
 ########MAPA DE MONAPO###################
 
 #### GRAFICO de subapa economia
-filtro_economia_monapo<- radioButtons("monapo_filtro_economica", "Selecione uma opcção:",
-                     c("Tipo de Rendimento","Rendimento Mensal"))
+filtro_economia_ribaue<- radioButtons("ribaue_filtro_economica", "Selecione uma opcção:",
+                                      c("Tipo de Rendimento","Rendimento Mensal"))
 
-
-
- 
-
- 
