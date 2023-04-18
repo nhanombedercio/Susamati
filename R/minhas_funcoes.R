@@ -27,7 +27,7 @@ library(bslib)
   }
 
   ## funcao que cria um grafico
-  grafico <- function(dados, x, y, fill, dados_total, string_familias){
+  grafico <- function(dados, x, y, fill, dados_total, string_familias, limsup, quebra){
     library(ggplot2)
     ggplot(dados, aes(text =paste("Numero de familias:", {{y}}, "de", nrow(dados_total), string_familias),x = {{x}}, y = {{y}}, fill = {{fill}})) +
       geom_col() +
@@ -35,16 +35,14 @@ library(bslib)
                                                                   x="",
                                                                   y="Numero de Familias"
       )+theme(legend.position = "top")+
-      scale_y_continuous(limits = c(0,250), breaks = seq(0,250,by=50))
+      scale_y_continuous(limits = c(0,limsup), breaks = seq(0,limsup,by=quebra))
   }
  
   
   
- 
-  
   ###funcao para mapa
   
- funcao_mapa<-function(data_sf, dado_dist){
+ funcao_mapa<-function(data_sf, dado_dist, tam_letra,num_caract){
    library(stringr)
    dados_mapa <- left_join(data_sf, dado_dist %>% group_by(District_ID, distrito, tipo_casa_banho1) %>% 
                              summarise(Total = n()) %>% mutate(percentagem = round(Total / sum(Total) * 100, digits = 2)),
@@ -56,10 +54,10 @@ library(bslib)
      geom_sf(size = 1.5) +
      scale_fill_distiller(palette = "Purples", direction = 1) +
      theme_bw() +
-     facet_wrap(vars(tipo_casa_banho1), nrow = 1L, labeller = labeller(tipo_casa_banho1 = function(x) str_wrap(x, width = 30))) +
+     facet_wrap(vars(tipo_casa_banho1), nrow = 1L, labeller = labeller(tipo_casa_banho1 = function(x) str_wrap(x, width = num_caract))) +
      theme(
        strip.text = element_text(
-         size = 12, # Tamanho do texto aumentado para 10
+         size = tam_letra, # Tamanho do texto aumentado para 10
          face = "bold",
          color = "black",
          margin = margin(12, 12, 12, 12, "pt")
@@ -72,10 +70,10 @@ library(bslib)
  }
    
  ############Rendimento mensal 
- tipo_redimento<-function(dado) {
+ tipo_redimento<-function(dado,limsup, quebra) {
    visitas <- as.name("famílias visitadas")
    
-   grafico(create_summary_table(dado, "rendimento_tipo"),x=rendimento_tipo,y=Total, fill=rendimento_tipo, dado,visitas)+
+   grafico(create_summary_table(dado, "rendimento_tipo"),x=rendimento_tipo,y=Total, fill=rendimento_tipo, dado,visitas,limsup, quebra)+
      labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
           x="",
           y="Numero de Familias")+
@@ -86,9 +84,9 @@ library(bslib)
  }
  
 ############## 
- faixa_rendimento  <- function(dados) {
+ faixa_rendimento  <- function(dados,limsup, quebra) {
    tem_latrina <- as.name("famílias visitadas")
-   grafico(create_summary_table(dado, "rendimento_faixa"), x = rendimento_faixa, y = Total, fill = rendimento_faixa,dados,tem_latrina) +
+   grafico(create_summary_table(dado, "rendimento_faixa"), x = rendimento_faixa, y = Total, fill = rendimento_faixa,dados,tem_latrina,limsup, quebra) +
      labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
           x = "",
           y = "Numero de Familias") +
@@ -98,3 +96,84 @@ library(bslib)
      theme(legend.position = "top")
    #return(grafico(monapo, tem_latrina, 250, 50))
  }
+ 
+ ##_____________________Cobertura de saneamento______________________
+ tem_latrina<-function(dados,limsup, quebra){
+   visitas <- as.name("famílias visitadas")
+   
+   grafico(create_summary_table(dados, "Tem_latrina"),x=Tem_latrina,y=Total, fill=Tem_latrina, dados,visitas,limsup, quebra)+
+     labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
+          x="",
+          y="Numero de Familias")+theme(legend.position = "top")
+ }
+ 
+ 
+ 
+ disponivel_casa_banho<- function(dados,limsup, quebra){
+   dado1<- filter(dados, Tem_latrina=="SIM")
+   tem_latrina <- as.name("famílias quem tem latrina")
+   grafico(create_summary_table(dado1, "disponivel_casa_banho"),x=disponivel_casa_banho,y=Total, fill=disponivel_casa_banho, dado1,tem_latrina,limsup, quebra)+
+     labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
+          x="",
+          y="Numero de Familias")
+ }
+ 
+ tem_casota<-function(dados, limsup, quebra){
+   graf_casota=dados %>%
+     filter(Tem_latrina %in% "SIM") %>%
+     ggplot() +
+     aes(x = tem_casota, fill = tem_casota) +
+     geom_bar() +
+     scale_fill_hue(direction = 1)+ggthemes::theme_stata()+labs(subtitle = " ",
+                                                                x="",
+                                                                y="Numero de Familias")+theme(legend.position = "top")+
+     scale_y_continuous(limits = c(0,limsup), breaks = seq(0,limsup,by=quebra))
+   return(graf_casota)
+ }
+
+#______________Vontade de contribuir___________________________________________
+ tem_condicoes<-function(dados,limsup, quebra){
+   visitas <- as.name("famílias visitadas")
+ #  table(nacala$tem_condicoes)
+ monapo1 <- dados%>%
+   filter(!(tem_condicoes %in% ".a"))
+ # table(nacala$quanto_contribuir)
+ grafico(create_summary_table(monapo1, "tem_condicoes"),x=tem_condicoes,y=Total, fill=tem_condicoes, monapo1,visitas,limsup, quebra)+
+   labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
+        x="Pode contribuir com melhoria da sua sanita",
+        y="Numero de Familias")+theme(legend.position = "top")}
+ 
+ valor_contribuir<-function(dado){
+   dado1<-filter(dado, tem_condicoes=="SIM") 
+   ggplot(dado1) +
+     aes(x = quanto_contribuir) +
+     geom_boxplot() +
+     scale_fill_manual(values = c("#F8766D","#8C00C1", "#FF61C3", "blue", "yellow")) +
+     labs(x = "Localidade", y = "Valor que a familia pode contribuir para melhorar sua latrina", 
+          fill = "Localidade") +
+     ggthemes::theme_stata() +
+     theme(axis.title.y = element_text(face = "bold"), axis.title.x = element_text(face = "bold"))
+   
+ }
+
+ 
+ #_________________ECONOMIA__________________________
+ rendimento_tipo<-function(dados,limsup, quebra){
+   visitas <- as.name("famílias visitadas")
+   
+   grafico(create_summary_table(dados, "rendimento_tipo"),x=rendimento_tipo,y=Total, fill=rendimento_tipo, dados,visitas,limsup, quebra)+
+     labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
+          x="",
+          y="Numero de Familias")+theme(legend.position = "top")
+   
+ }
+ rendimento_faixa<-function(dados,limsup, quebra){ 
+   tem_latrina <- as.name("famílias visitadas")
+   grafico(create_summary_table(dados, "rendimento_faixa"),x=rendimento_faixa,y=Total, fill=rendimento_faixa, dados,tem_latrina,limsup, quebra)+
+     labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
+          x="",
+          y="Numero de Familias") }
+
+
+
+ 

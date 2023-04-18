@@ -23,18 +23,19 @@ library(readr)
 dir <- "data"
 Nampula_clear <- read_excel(paste(dir, "/Nampula_clear.xls", sep=""))
 
-ribaue <- Nampula_clear %>% filter(District_ID %in% "MZ0723") ## Monapo 
-ribaue$tipo_casa_banho1<- ifelse(is.na(ribaue$tipo_casa_banho1), "Sem Latrina", ribaue$tipo_casa_banho1)
+nacala <- Nampula_clear %>% filter(District_ID %in% "MZ0720") ## nacala 
+nacala$tipo_casa_banho1<- ifelse(is.na(nacala$tipo_casa_banho1), "Sem Latrina", nacala$tipo_casa_banho1)
 ## shapfile de distritos
-ribaue_sf <- readRDS(paste(dir, "/sf_districts.rds", sep="")) %>% filter(District_ID %in% "MZ0723")
+nacala_sf <- readRDS(paste(dir, "/sf_districts.rds", sep="")) %>% filter(District_ID %in% "MZ0720")
 
 
 ###JUNTAR BASE DE DADOS E SHAPFILE
 
 
-########MAPA DE MONAPO###################
+########MAPA DE nacala###################
 
 #### GRAFICO de subapa economia
-filtro_economia_ribaue<- radioButtons("ribaue_filtro_economica", "Selecione uma opcção:",
+filtro_economia_nacala<- radioButtons("nacala_filtro_economica", "Selecione uma opcção:",
                                       c("Tipo de Rendimento","Rendimento Mensal"))
 
+ 

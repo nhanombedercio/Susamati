@@ -28,7 +28,7 @@ ui <- fluidPage(
   navbarPage(
     # Define o título da barra de navegação
     title = "SUSAMATI" ,
-    header = "Meu Cabeçalho",
+   # header = "Meu Cabeçalho",
    # tags$head(tags$style(HTML('.navbar-default {background-color: #a742f5;}'))),
     #title = "ASSOCIAÇÃO MUVA",
     
@@ -85,7 +85,7 @@ ui <- fluidPage(
                tabPanel("Situação económica",tabname="monapo_situacao", icon=icon("chart-line"),
                         # Define as colunas do layout de grade
                         column(12,
-                              # wellPanel(filtro_economia_monapo)
+                              wellPanel(filtro_economia_monapo)
                         ),
                         
                         
@@ -254,10 +254,10 @@ ui <- fluidPage(
                         ),
                         
                         column(6,
-                               plotlyOutput("Chuiba_saneamento_baseline")
+                               plotlyOutput("chuiba_saneamento_baseline")
                         ),  
                         column(6,
-                               plotlyOutput("Chuiba_saneamento_endline")
+                               plotlyOutput("chuiba_saneamento_endline")
                         ), 
                         
                ), 
@@ -272,10 +272,10 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("Chuiba_vontade_baseline")
+                               plotlyOutput("chuiba_vontade_baseline")
                         ),  
                         column(6,
-                               plotlyOutput("Chuiba_vontade_endline")
+                               plotlyOutput("chuiba_vontade_endline")
                         ),                
                         
                ),
@@ -289,10 +289,10 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("Chuiba_economica_baseline")
+                               plotlyOutput("chuiba_economica_baseline")
                         ),  
                         column(6,
-                               plotlyOutput("Chuiba_economica_endline")
+                               plotlyOutput("chuiba_economica_endline")
                         ),               
                         
                ),
@@ -378,16 +378,136 @@ ui <- fluidPage(
 
 # Define o servidor
 server <- function(input, output) {
-  ###########MONAPO#
-  output$monapo_mapa<- renderPlotly({
-     funcao_mapa(monapo_sf, monapo)
-    })
+  
+#______________mapas______________________#
   
   ###########MONAPO#
+  output$monapo_mapa<- renderPlotly({
+     funcao_mapa(monapo_sf, monapo,12,30)
+    })
+  
+  ###########Ribaue#
   output$ribaue_mapa<- renderPlotly({
-    funcao_mapa(ribaue_sf, ribaue)
+    funcao_mapa(ribaue_sf, ribaue,11,30)
   })
+  ###########mapa nacala#
+  output$nacala_mapa<- renderPlotly({
+    funcao_mapa(nacala_sf, nacala,11,30)
+  })
+  #################MAPA DE PEMBA
+  
+  #__________________cobertura DE SANEAME____________________________
 
+  ####MONAPO
+  output$monapo_saneamento_baseline <- renderPlotly({
+    if(input$monapo_filtro_cobertura=="Tem Latrina?") {
+    tem_latrina(monapo,300,50)
+    } else 
+      if(input$monapo_filtro_cobertura=="Latrina esta sempre disponivel") {
+        disponivel_casa_banho(monapo,300,50)
+        
+      }else
+        if(input$monapo_filtro_cobertura=="tem casota"){
+          tem_casota(monapo,300,50)}})
+  ####ribaue
+  output$ribaue_saneamento_baseline <- renderPlotly({
+    if(input$ribaue_filtro_cobertura=="Tem Latrina?") {
+      tem_latrina(ribaue,300,50)
+    } else 
+      if(input$ribaue_filtro_cobertura=="Latrina esta sempre disponivel") {
+        disponivel_casa_banho(ribaue,300,50)
+        
+      }else
+        if(input$ribaue_filtro_cobertura=="tem casota"){
+          tem_casota(ribaue,300, 50)}})
+  ####nacala
+  output$nacala_saneamento_baseline <- renderPlotly({
+    if(input$nacala_filtro_cobertura=="Tem Latrina?") {
+      tem_latrina(nacala,300,50)
+    } else 
+      if(input$nacala_filtro_cobertura=="Latrina esta sempre disponivel") {
+        disponivel_casa_banho(nacala,300,50)
+        
+      }else
+        if(input$nacala_filtro_cobertura=="tem casota"){
+          tem_casota(nacala,300, 50)}})
+  
+  output$chuiba_saneamento_baseline <- renderPlotly({
+    if(input$chuiba_filtro_saneamento=="Tem Latrina?") {
+      tem_latrina(pemba,1200, 400)
+    } else 
+      if(input$chuiba_filtro_saneamento=="Latrina esta sempre disponivel") {
+        disponivel_casa_banho(pemba,300,50)
+        
+      }else
+        if(input$chuiba_filtro_saneamento=="tem casota"){
+          tem_casota(pemba,1000,150)}
+    })
+  
+  
+  #______________Vontade de contribuir___________________________________
+  ##monapo
+  output$monapo_vontade_baseline <- renderPlotly({
+  if(input$monapo_filtro_vontade=="Podes contribuir para melhorar a sua sanita?") {
+    tem_condicoes(monapo,300,50)
+  }else 
+    if(input$monapo_filtro_vontade=="Com Quanto gostaria de constribuir?") {
+      valor_contribuir(monapo)
+       
+    } 
+  })
+  ##monapo
+  output$ribaue_vontade_baseline <- renderPlotly({
+    if(input$ribaue_filtro_vontade=="Podes contribuir para melhorar a sua sanita?") {
+      tem_condicoes(ribaue,300,50)
+    }else 
+      if(input$ribaue_filtro_vontade=="Com Quanto gostaria de constribuir?") {
+        valor_contribuir(ribaue)
+        
+      } 
+  })
+  ##nacala
+  output$nacala_vontade_baseline <- renderPlotly({
+    if(input$nacala_filtro_vontade=="Podes contribuir para melhorar a sua sanita?") {
+      tem_condicoes(nacala,300,50)
+    }else 
+      if(input$nacala_filtro_vontade=="Com Quanto gostaria de constribuir?") {
+        valor_contribuir(nacala)
+      # ggplotly(hist(monapo$quanto_contribuir,breaks = 20, col = "lightblue")) 
+      } 
+  })
+  
+  #_______________Enconomia____________________________________________________
+  ##monapo
+  output$monapo_economica_baseline <- renderPlotly({
+    
+    if(input$monapo_filtro_economica=="Tipo de Rendimento") {
+       tipo_redimento(monapo,300,50)
+      
+    } else 
+      if(input$monapo_filtro_economica=="Rendimento Mensal") {
+        rendimento_faixa(monapo,300,50)
+      } })
+  ## ribaue
+  output$ribaue_economica_baseline <- renderPlotly({
+    
+    if(input$ribaue_filtro_economica=="Tipo de Rendimento") {
+      tipo_redimento(ribaue,300,50)
+       
+    } else 
+      if(input$ribaue_filtro_economica=="Rendimento Mensal") {
+        rendimento_faixa(ribaue,300,50)
+      } })
+  ## nacala
+  output$nacala_economica_baseline <- renderPlotly({
+    
+    if(input$nacala_filtro_economica=="Tipo de Rendimento") {
+      tipo_redimento(nacala,300,50)
+      
+    } else 
+      if(input$nacala_filtro_economica=="Rendimento Mensal") {
+        rendimento_faixa(nacala,300,50)
+      } })
 }
 # Execute o aplicativo Shiny
 shinyApp(ui, server)

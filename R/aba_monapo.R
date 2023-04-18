@@ -17,9 +17,11 @@ library(DT)
 library(shinyWidgets)
 library(shinydashboard)
 library(bslib)
+library(readxl)
+library(readr)
 
 
-dir <- "C:/Users/Dercio/OneDrive/Projectos Rstudio/2023/Susamati/data"
+dir <- "data"
 Nampula_clear <- read_excel(paste(dir, "/Nampula_clear.xls", sep=""))
 
 monapo <- Nampula_clear %>% filter(District_ID %in% "MZ0715") ## Monapo 
@@ -38,7 +40,5 @@ filtro_economia_monapo<- radioButtons("monapo_filtro_economica", "Selecione uma 
                      c("Tipo de Rendimento","Rendimento Mensal"))
 
 
-
  
-
  

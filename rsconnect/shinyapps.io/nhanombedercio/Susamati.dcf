@@ -4,10 +4,11 @@ username:
 account: nhanombedercio
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 8859299
-bundleId: 7092941
-url: https://nhanombedercio.shinyapps.io/Susamati/
-when: 1681557080.63537
-lastSyncTime: 1681557080.63537
+appId: 8882298
+bundleId: 7103963
+url: https://hayusten.shinyapps.io/Susamati/
+when: 1681817715.98653
+lastSyncTime: 1681817715.98654
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: data/TESTE 3,3.R
