@@ -17,7 +17,9 @@ library(DT)
 library(shinyWidgets)
 library(shinydashboard)
 library(bslib)
-  create_summary_table <- function(data, group_vars, count_var) {
+ 
+
+create_summary_table <- function(data, group_vars, count_var) {
    summary_table <- data %>%
       group_by(across(all_of(group_vars))) %>%
      summarise(Total= n()) %>%
@@ -124,9 +126,10 @@ library(bslib)
      ggplot() +
      aes(x = tem_casota, fill = tem_casota) +
      geom_bar() +
-     scale_fill_hue(direction = 1)+ggthemes::theme_stata()+labs(subtitle = " ",
-                                                                x="",
-                                                                y="Numero de Familias")+theme(legend.position = "top")+
+     scale_fill_hue(direction = 1)+
+     ggthemes::theme_stata()+labs(subtitle = " ",
+                                  x="",
+                                  y="Numero de Familias")+theme(legend.position = "top")+
      scale_y_continuous(limits = c(0,limsup), breaks = seq(0,limsup,by=quebra))
    return(graf_casota)
  }
@@ -155,9 +158,9 @@ library(bslib)
      theme(axis.title.y = element_text(face = "bold"), axis.title.x = element_text(face = "bold"))
    
  }
-
+  
  
- #_________________ECONOMIA__________________________
+ #_________________________________ECONOMIA_____________________________________________________________________
  rendimento_tipo<-function(dados,limsup, quebra){
    visitas <- as.name("famílias visitadas")
    
@@ -167,12 +170,14 @@ library(bslib)
           y="Numero de Familias")+theme(legend.position = "top")
    
  }
- rendimento_faixa<-function(dados,limsup, quebra){ 
+
+   rendimento_faixa<-function(dados,limsup, quebra){ 
    tem_latrina <- as.name("famílias visitadas")
    grafico(create_summary_table(dados, "rendimento_faixa"),x=rendimento_faixa,y=Total, fill=rendimento_faixa, dados,tem_latrina,limsup, quebra)+
      labs(subtitle = "Linha preta representa o numero total de familias entrevistadas",
           x="",
-          y="Numero de Familias") }
+          y="Numero de Familias") 
+   }
 
 
 

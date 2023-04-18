@@ -476,6 +476,16 @@ server <- function(input, output) {
       # ggplotly(hist(monapo$quanto_contribuir,breaks = 20, col = "lightblue")) 
       } 
   })
+  ##Pemba
+  output$chuiba_vontade_baseline <- renderPlotly({
+    if(input$chuiba_filtro_vontade=="Podes contribuir para melhorar a sua sanita?") {
+      tem_condicoes(pemba,700,150)
+    }else 
+      if(input$chuiba_filtro_vontade=="Com Quanto gostaria de constribuir?") {
+        valor_contribuir(pemba)
+        # ggplotly(hist(monapo$quanto_contribuir,breaks = 20, col = "lightblue")) 
+      } 
+  })
   
   #_______________Enconomia____________________________________________________
   ##monapo
@@ -507,6 +517,16 @@ server <- function(input, output) {
     } else 
       if(input$nacala_filtro_economica=="Rendimento Mensal") {
         rendimento_faixa(nacala,300,50)
+      } })
+  ## Pemba
+  output$chuiba_economica_baseline <- renderPlotly({
+    
+    if(input$chuiba_filtro_economica=="Tipo de Rendimento") {
+      tipo_redimento(pemba,1300,150)
+       
+    } else 
+      if(input$chuiba_filtro_economica=="Rendimento Mensal") {
+        rendimento_faixa(pemba,1300,150)
       } })
 }
 # Execute o aplicativo Shiny
