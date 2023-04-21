@@ -285,7 +285,7 @@ ui <- fluidPage(
                                wellPanel( radioButtons("chuiba_filtro_economica", "Selecione uma opcção:",
                                                        c("Tipo de Rendimento","Rendimento Mensal")),
                                )
-                        ),
+                        ), 
                         
                         
                         column(6,
@@ -451,10 +451,11 @@ server <- function(input, output) {
   if(input$monapo_filtro_vontade=="Podes contribuir para melhorar a sua sanita?") {
     tem_condicoes(monapo,300,50)
   }else 
-    if(input$monapo_filtro_vontade=="Com Quanto gostaria de constribuir?") {
+   if(input$monapo_filtro_vontade=="Com Quanto gostaria de constribuir?") {
       valor_contribuir(monapo)
        
-    } 
+    }
+    
   })
   ##monapo
   output$ribaue_vontade_baseline <- renderPlotly({
