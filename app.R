@@ -17,10 +17,14 @@ library(DT)
 library(shinyWidgets)
 library(shinydashboard)
 library(bslib)
+library(shinycssloaders)
+library(ggmap)
+library(ggspatial)
+library(rmarkdown)
  
 # Define UI
 ui <- fluidPage(
-  
+   
   # Define o tema
   theme = shinytheme("flatly"),
   
@@ -32,18 +36,26 @@ ui <- fluidPage(
    # tags$head(tags$style(HTML('.navbar-default {background-color: #a742f5;}'))),
     #title = "ASSOCIAÇÃO MUVA",
     
+   ##VISAO GERAL
+  navbarMenu("VISAO GERAL",
+    tabPanel("Overview",
+             uiOutput("rmd_page")
+   )),
+  
+ 
+   
     #BASELINE  
     navbarMenu("MONAPO", icon=icon("exchange-alt"),
                tabPanel("MAPA-Tipo de saneamento",
                         column(12,
                                wellPanel(h4("Mapa de variação em baixo mostra 
                                tipo de latrina mais frequente em Monapo. 
-                                            Quando mais carregado for 
+                                            Quanto mais carregado for 
                                             a cor do mapa mais familias usam esse tipo de latrina.
                                             Deslize o mouse nos mapas para verificar a percentagem 
                                             das familias que usa determinado tipo de latrina
                                             ")),
-                               plotlyOutput("monapo_mapa", height = 500)
+                               withSpinner(plotlyOutput("monapo_mapa", height = 500),color="black")
                         )),
                tabPanel("Cobertura de saneamento",tabname="monapo_saneamento", icon=icon("chart-line"),
                         # Define as colunas do layout de grade
@@ -55,11 +67,11 @@ ui <- fluidPage(
                         column(6, 
                                #h4("BASELINE"),
                                # h4("Em Monapo Visitamos", count(monapo), "familias", "onde 1", "familia não aceitou ser entrevistada"),
-                               plotlyOutput("monapo_saneamento_baseline", height = 500)),
+                               withSpinner( plotlyOutput("monapo_saneamento_baseline", height = 500),color="black")),
                         
                         
                         column(6,
-                               plotlyOutput("monapo_saneamento_endline", height = 500)
+                                plotlyOutput("monapo_saneamento_endline", height = 500) 
                         ),
                         
                         
@@ -75,7 +87,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("monapo_vontade_baseline",height = 500)
+                               withSpinner(plotlyOutput("monapo_vontade_baseline",height = 500),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("monapo_vontade_endline",height = 500)
@@ -90,7 +102,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("monapo_economica_baseline",height = 500)
+                               withSpinner(plotlyOutput("monapo_economica_baseline",height = 500),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("monapo_economica_endline",height = 500)
@@ -106,12 +118,12 @@ ui <- fluidPage(
                         column(12,
                                wellPanel(h4("Mapa de variação em baixo mostra 
                                tipo de latrina mais frequente em Ribaue. 
-                                            Quando mais carregado for 
+                                            Quanto mais carregado for 
                                             a cor do mapa mais familias usam esse tipo de latrina.
                                             Deslize o mouse nos mapas para verificar a percentagem 
                                             das familias que usa determinado tipo de latrina
                                             ")),
-                               plotlyOutput("ribaue_mapa", height = 500)
+                               withSpinner(plotlyOutput("ribaue_mapa", height = 500),color="purple")
                         )),
                tabPanel("Cobertura de saneamento",tabname="ribaue_saneamento", icon=icon("chart-line"),
                         # Define as colunas do layout de grade
@@ -123,7 +135,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("ribaue_saneamento_baseline")
+                               withSpinner(plotlyOutput("ribaue_saneamento_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("ribaue_saneamento_endline")
@@ -141,7 +153,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("ribaue_vontade_baseline")
+                               withSpinner(plotlyOutput("ribaue_vontade_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("ribaue_vontade_endline")
@@ -158,14 +170,14 @@ ui <- fluidPage(
                         ),
                         
                         column(6,
-                               plotlyOutput("ribaue_economica_baseline")
+                               withSpinner(plotlyOutput("ribaue_economica_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("ribaue_economica_endline")
                         ),               
                         
-               ),
-               
+               ), 
+   
     ), # ribaue
     ##NACALA-A-VELHA
     navbarMenu("NACALA-A-VELHA", icon=icon("exchange-alt"),
@@ -173,12 +185,12 @@ ui <- fluidPage(
                         column(12,
                                wellPanel(h4("Mapa de variação em baixo mostra 
                                tipo de latrina mais frequente em Nacala. 
-                                            Quando mais carregado for 
+                                            Quanto mais carregado for 
                                             a cor do mapa mais familias usam esse tipo de latrina.
                                             Deslize o mouse nos mapas para verificar a percentagem 
                                             das familias que usa determinado tipo de latrina
                                             ")),
-                               plotlyOutput("nacala_mapa", height = 500)
+                               withSpinner(plotlyOutput("nacala_mapa", height = 500),color="purple")
                         )),
                tabPanel("Cobertura de saneamento",tabname="nacala_saneamento", icon=icon("chart-line"),
                         column(12,
@@ -189,7 +201,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("nacala_saneamento_baseline")
+                               withSpinner(plotlyOutput("nacala_saneamento_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("nacala_saneamento_endline")
@@ -206,7 +218,7 @@ ui <- fluidPage(
                         ),
                         
                         column(6,
-                               plotlyOutput("nacala_vontade_baseline")
+                               withSpinner(  plotlyOutput("nacala_vontade_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("nacala_vontade_endline")
@@ -223,7 +235,8 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("nacala_economica_baseline")
+                               withSpinner(plotlyOutput("nacala_economica_baseline") ,color="purple")
+                               
                         ),  
                         column(6,
                                plotlyOutput("nacala_economica_endline")
@@ -238,13 +251,13 @@ ui <- fluidPage(
                         column(12,
                                wellPanel(h4("Mapa de variação em baixo mostra 
                                tipo de latrina mais frequente em Chuiba 
-                                            Quando mais carregado for 
+                                            Quanto mais carregado for 
                                             a cor do mapa mais familias usam esse tipo de latrina.
                                             Deslize o mouse nos mapas para verificar a percentagem 
                                             das familias que usa determinado tipo de latrina
                                             ")),
-                               plotlyOutput("chuiba_mapa", height = 500)
-                        )),
+                               withSpinner(plotlyOutput("chuiba_mapa", height = 500) ,color="purple")
+                               )),
                tabPanel("Cobertura de saneamento",tabname="Chuiba_saneamento", icon=icon("chart-line"),
                         # Define as colunas do layout de grade
                         column(12,
@@ -254,7 +267,7 @@ ui <- fluidPage(
                         ),
                         
                         column(6,
-                               plotlyOutput("chuiba_saneamento_baseline")
+                               withSpinner(plotlyOutput("chuiba_saneamento_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("chuiba_saneamento_endline")
@@ -272,7 +285,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("chuiba_vontade_baseline")
+                               withSpinner(plotlyOutput("chuiba_vontade_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("chuiba_vontade_endline")
@@ -289,10 +302,10 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("chuiba_economica_baseline")
+                               withSpinner(plotlyOutput("chuiba_economica_baseline"),color="purple")
                         ),  
                         column(6,
-                               plotlyOutput("chuiba_economica_endline")
+                             plotlyOutput("chuiba_economica_endline") 
                         ),               
                         
                ),
@@ -306,12 +319,12 @@ ui <- fluidPage(
                         column(12,
                                wellPanel(h4("Mapa de variação em baixo mostra 
                                tipo de latrina mais frequente em Mandimba 
-                                            Quando mais carregado for 
+                                            Quanto mais carregado for 
                                             a cor do mapa mais familias usam esse tipo de latrina.
                                             Deslize o mouse nos mapas para verificar a percentagem 
                                             das familias que usa determinado tipo de latrina
                                             ")),
-                               plotlyOutput("mandimba_mapa", height = 500)
+                               withSpinner(  plotlyOutput("mandimba_mapa", height = 500),color="purple")
                         )),
                tabPanel("Cobertura de saneamento",tabname="Mandimba_saneamento", icon=icon("chart-line"),
                         # Define as colunas do layout de grade
@@ -323,7 +336,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("Mandimba_saneamento_baseline")
+                               withSpinner(plotlyOutput("Mandimba_saneamento_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("Mandimba_saneamento_endline")
@@ -341,7 +354,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("Mandimba_vontade_baseline")
+                               withSpinner( plotlyOutput("Mandimba_vontade_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("Mandimba_vontade_endline")
@@ -358,7 +371,7 @@ ui <- fluidPage(
                         
                         
                         column(6,
-                               plotlyOutput("Mandimba_economica_baseline")
+                               withSpinner( plotlyOutput("Mandimba_economica_baseline"),color="purple")
                         ),  
                         column(6,
                                plotlyOutput("Mandimba_economica_endline")
@@ -529,6 +542,11 @@ server <- function(input, output) {
       if(input$chuiba_filtro_economica=="Rendimento Mensal") {
         rendimento_faixa(pemba,1300,150)
       } })
+  
+  ####PDF
+  output$rmd_page <- renderUI({
+    includeMarkdown("visaogeral.Rmd")
+  })
 }
 # Execute o aplicativo Shiny
 shinyApp(ui, server)
