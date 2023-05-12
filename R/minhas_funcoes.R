@@ -71,9 +71,9 @@ create_summary_table <- function(data, group_vars, count_var) {
         axis.text.x = element_blank(), 
         axis.text.y = element_blank()
       ) +
-      labs(x = "Longitude", y = "Latitude") +
-      geom_text(x = centro_mapa$x, y = centro_mapa$y, label = paste0("Percentagem: ", dados_mapa$percentagem, "%"), 
-                size = tam_letra, color = "black")
+      labs(x = "Longitude", y = "Latitude") #+
+      #geom_text(x = centro_mapa$x, y = centro_mapa$y, label = paste0("Percentagem: ", dados_mapa$percentagem, "%"), 
+       #         size = tam_letra, color = "black")
     
     #ggsave(filename, plot = mapa, device = "png", width = 10, height = 7, dpi = 300)
     
